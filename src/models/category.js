@@ -1,8 +1,11 @@
 import mongoose from "mongoose";
 
 const categorySche = new mongoose.Schema({
-    name: String,
-},{
+    name: {
+        type: String
+    }
+}
+,{
     timestamps: true,
     versionKey: false
 })

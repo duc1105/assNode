@@ -1,9 +1,11 @@
 import joi from "joi";
 import Product from "../models/products";
+import Category from "../models/category";
 
 const productSchema = joi.object({
     name: joi.string().required(),
     price: joi.number().required(),
+    image: joi.string().required(),
     description: joi.string(),
     categoryId: joi.string().required()
 });
