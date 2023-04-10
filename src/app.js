@@ -4,11 +4,13 @@ import authRouter from "./routers/auth"
 import mongoose from "mongoose";
 import cors from "cors"
 import cateRouter from "./routers/category";
+import uploadImage from "./routers/upload";
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 app.use("/api",productsRouter);
+app.use("/api", uploadImage);
 app.use("/api",authRouter);
 app.use("/api",cateRouter)
 mongoose.connect("mongodb://127.0.0.1:27017/web17309").then(() => { 

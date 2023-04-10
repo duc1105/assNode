@@ -8,27 +8,61 @@ const categorySchema = joi.object({
     name: joi.string().required(),
 });
 
+// export const getAllCate = async (req, res) => {
+//     try {
+//         const categories = await Category.find();
+//         if (categories.length === 0) {
+//             return res.json({
+//                 message: "Không có danh mục nào",
+//             });
+//         }
+//         return res.json(categories);
+//     } catch (error) {
+//         return res.status(400).json({
+//             message: error.message,
+//         });
+//     }
+// };
+
 export const getAllCate = async (req, res) => {
+
+    const { _sort = "createAt", _order = "_asc", _limit = 10, _page = 1, _keywords } = req.query;
+    const options = {
+        page: _page,
+        limit: _limit,
+        sort: { [_sort]: _order === "desc" ? -1 : 1 },
+    };
+
     try {
-        const categories = await Category.find();
-        if (categories.length === 0) {
-            return res.json({
-                message: "Không có danh mục nào",
-            });
+        const searchData = (categories) => {
+            return categories?.docs?.filter((item) => item.name.toLowerCase().includes(_keywords))
         }
-        return res.json(categories);
+        const categories = await Category.paginate({}, options);
+
+        if (categories.lenghth === 0) {
+            return res.json({
+                message: 'Không có sản phẩm nào',
+            })
+        }
+        else {
+            const searchDataCate = await searchData(categories)
+            const productsRespone = await { ...categories, docs: searchDataCate }
+            return res.json(productsRespone);
+        }
+
     } catch (error) {
         return res.status(400).json({
-            message: error.message,
+            message: error,
         });
     }
 };
+
 export const getCate = async function (req, res) {
     try {
         const category = await Category.findById(req.params.id)
         const products = await Product.find({ categoryId: req.params.id });
 
-        
+
         if (!category) {
             return res.json({
                 message: "Không có danh mục nào",

@@ -17,7 +17,6 @@ export const signupSchema = joi.object({
         "any.required": "Trường confirm password là bắt buộc",
     }),
 });
-
 export const signinSchema = joi.object({
     email: joi.string().email().required().messages({
         "string.email": "Email không hợp lệ",
